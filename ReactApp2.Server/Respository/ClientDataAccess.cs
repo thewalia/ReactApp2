@@ -54,7 +54,7 @@ namespace ReactApp2.Server.Respository
                         {
                             return new Client
                             {
-                                ClientId = (int)reader["Id"],
+                                ClientId = (int)reader["ClientId"],
                                 Username = (string)reader["Username"],
                                 Password = (string)reader["Password"]
                             };

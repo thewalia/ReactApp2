@@ -54,7 +54,7 @@ namespace ReactApp2.Server.Respository
                         {
                             return new Advisor
                             {
-                                AdvisorId = (int)reader["Id"],
+                                AdvisorId = (int)reader["AdvisorId"],
                                 Username = (string)reader["Username"],
                                 Password = (string)reader["Password"]
                             };
