@@ -1,6 +1,6 @@
 
-using Microsoft.EntityFrameworkCore;
-using ReactApp2.Server.Data;
+using ReactApp2.Server.Respository;
+
 
 namespace ReactApp2.Server
 {
@@ -11,14 +11,22 @@ namespace ReactApp2.Server
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            
             builder.Services.AddControllers();
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            // Register AdvisorDataAccess as a singleton
+            builder.Services.AddSingleton(new AdvisorDataAccess(connectionString));
+            builder.Services.AddSingleton(new ClientDataAccess(connectionString));
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Add authentication
+            
 
             var app = builder.Build();
 

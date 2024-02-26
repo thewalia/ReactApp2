@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using ReactApp2.Server.Data;
+
 using ReactApp2.Server.Models;
+using ReactApp2.Server.Respository;
 
 namespace ReactApp2.Server.Controllers
 {
@@ -9,37 +10,42 @@ namespace ReactApp2.Server.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ClientDataAccess _dataAccess;
 
-        public ClientController(AppDbContext context)
+        public ClientController(ClientDataAccess dataAccess)
         {
-            _context = context;
+            _dataAccess = dataAccess;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Client>> Register(Client client)
+        public ActionResult Register(Client client)
         {
             // TODO: Add validation here
 
-            _context.Clients.Add(client);
-            await _context.SaveChangesAsync();
+            _dataAccess.RegisterClient(client);
 
-            return CreatedAtAction(nameof(GetClient), new { id = client.Id }, client);
+            return CreatedAtAction(nameof(GetClient), new { id = client.ClientId }, client);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(int id)
+        public ActionResult<Client> GetClient(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            return client;
+            // TODO: Implement this method
+            return NotFound();
         }
 
-        // TODO: Add a login method
+        // Login method
+        [HttpPost("login")]
+        public ActionResult Login(Client client)
+        {
+            var dbClient = _dataAccess.ValidateClient(client);
+
+            if (dbClient == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+        }
     }
 }
