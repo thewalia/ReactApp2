@@ -45,6 +45,9 @@ namespace ReactApp2.Server.Controllers
                 return Unauthorized();
             }
 
+            // Store the username in the session
+            HttpContext.Session.SetString("username", dbAdvisor.Username);
+
             return Ok();
         }
     }

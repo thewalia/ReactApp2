@@ -1,49 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
-    const [forecasts, setForecasts] = useState();
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [sessionValue, setSessionValue] = useState("");
 
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
+    const login = async () => {
+        const response = await fetch('https://localhost:7211/api/Advisor/Login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'
+        });
 
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tabelLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
+        if (response.ok) {
+            console.log("Login successful");
+        } else {
+            console.log("Login failed");
+        }
+    };
+
+    const testSession = async () => {
+        const response = await fetch('https://localhost:7211/api/SessionTesting/get-session', {
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const value = await response.text();
+            setSessionValue(value);
+        } else {
+            console.log("Session test failed");
+        }
+    };
 
     return (
         <div>
-            <h1 id="tabelLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div>
+                <h2>Login</h2>
+                <input type="text" placeholder="Username" onChange={e => setUsername(e.target.value)} />
+                <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+                <button onClick={login}>Login</button>
+            </div>
+            <div>
+                <h2>Test Session</h2>
+                <button onClick={testSession}>Test Session</button>
+                <p>Session value: {sessionValue}</p>
+            </div>
         </div>
     );
-    
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        const data = await response.json();
-        setForecasts(data);
-    }
 }
 
 export default App;

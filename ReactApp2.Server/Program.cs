@@ -13,6 +13,25 @@ namespace ReactApp2.Server
             // Add services to the container.
             
             builder.Services.AddControllers();
+            builder.Services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // You can set the timeout here
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:5173") // Replace with your React app's URL
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
+                });
+            });
+
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -29,6 +48,8 @@ namespace ReactApp2.Server
             
 
             var app = builder.Build();
+            app.UseSession();
+            app.UseCors();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
