@@ -1,8 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 using ReactApp2.Server.Models;
 using ReactApp2.Server.Respository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace ReactApp2.Server.Controllers
 {
@@ -50,5 +54,43 @@ namespace ReactApp2.Server.Controllers
 
             return Ok();
         }
+
+        [HttpGet("LoginWithGoogle")]
+        public IActionResult LoginWithGoogle()
+        {
+            var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("GoogleResponse")]
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (result?.Succeeded != true)
+            {
+                return BadRequest();
+            }
+
+            // Extract the user's email from the claims
+            var email = result.Principal.FindFirstValue(ClaimTypes.Email);
+
+            // Look up the advisor in your database
+            var advisor = _dataAccess.GetAdvisorByEmail(email);
+
+            // If the advisor doesn't exist, create a new advisor
+            if (advisor == null)
+            {
+                advisor = new Advisor { Username = email, Password = "333" };
+                _dataAccess.RegisterAdvisor(advisor);
+            }
+
+            // Store the advisor's username in the session
+            HttpContext.Session.SetString("username", advisor.Username);
+
+            return Ok();
+        }
+
+
     }
 }

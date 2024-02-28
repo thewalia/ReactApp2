@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using ReactApp2.Server.Respository;
 
 
@@ -39,6 +41,18 @@ namespace ReactApp2.Server
             builder.Services.AddSingleton(new AdvisorDataAccess(connectionString));
             builder.Services.AddSingleton(new ClientDataAccess(connectionString));
 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogle(options =>
+            {
+                options.ClientId = "1024970798393-k1531gdt02tce8dp029hh1qdd2ka08bm.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+            });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -50,6 +64,7 @@ namespace ReactApp2.Server
             var app = builder.Build();
             app.UseSession();
             app.UseCors();
+            app.UseAuthentication();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

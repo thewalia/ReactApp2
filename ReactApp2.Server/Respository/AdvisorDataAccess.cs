@@ -67,5 +67,41 @@ namespace ReactApp2.Server.Respository
                 }
             }
         }
+
+        public Advisor GetAdvisorByEmail(string email)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("ValidateAdvisor", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@Username", email);
+                    command.Parameters.AddWithValue("@Password", "333");
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Advisor
+                            {
+                                AdvisorId = (int)reader["AdvisorId"],
+                                Username = (string)reader["Username"],
+                                Password = (string)reader["Password"]
+                            };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
