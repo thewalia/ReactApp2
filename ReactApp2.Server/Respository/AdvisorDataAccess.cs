@@ -19,12 +19,15 @@ namespace ReactApp2.Server.Respository
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("RegisterAdvisor", connection))
+                using (SqlCommand command = new SqlCommand("Insertadvisor", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Parameters
-                    command.Parameters.AddWithValue("@Username", advisor.Username);
+
+                    command.Parameters.AddWithValue("@FirstName", advisor.FirstName);
+                    command.Parameters.AddWithValue("@LastName", advisor.LastName);
+                    command.Parameters.AddWithValue("@Email", advisor.Email);
                     command.Parameters.AddWithValue("@Password", advisor.Password);
 
                     // ExecuteNonQuery since it's an INSERT operation
@@ -44,7 +47,7 @@ namespace ReactApp2.Server.Respository
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Parameters
-                    command.Parameters.AddWithValue("@Username", advisor.Username);
+                    command.Parameters.AddWithValue("@Email", advisor.Email);
                     command.Parameters.AddWithValue("@Password", advisor.Password);
 
                     // ExecuteReader since it's a SELECT operation
@@ -54,8 +57,10 @@ namespace ReactApp2.Server.Respository
                         {
                             return new Advisor
                             {
-                                AdvisorId = (int)reader["AdvisorId"],
-                                Username = (string)reader["Username"],
+                                AdvisorID = (int)reader["AdvisorID"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                Email = (string)reader["Email"],
                                 Password = (string)reader["Password"]
                             };
                         }
@@ -67,7 +72,6 @@ namespace ReactApp2.Server.Respository
                 }
             }
         }
-
         public Advisor GetAdvisorByEmail(string email)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -79,7 +83,7 @@ namespace ReactApp2.Server.Respository
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Parameters
-                    command.Parameters.AddWithValue("@Username", email);
+                    command.Parameters.AddWithValue("@Email", email);
                     command.Parameters.AddWithValue("@Password", "333");
 
                     // ExecuteReader since it's a SELECT operation
@@ -89,8 +93,8 @@ namespace ReactApp2.Server.Respository
                         {
                             return new Advisor
                             {
-                                AdvisorId = (int)reader["AdvisorId"],
-                                Username = (string)reader["Username"],
+                                AdvisorID = (int)reader["AdvisorId"],
+                                Email = (string)reader["Email"],
                                 Password = (string)reader["Password"]
                             };
                         }

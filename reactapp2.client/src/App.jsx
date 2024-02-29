@@ -1,59 +1,49 @@
-import { useState } from 'react';
 import './App.css';
+import { Dashboard } from './Components/Dashboard/Dashboard';
+import { AdvisorLogin } from './Components/Login/AdvisorLogin';
+import { ClientLogin } from './Components/Login/ClientLogin';
+import { AdvisorRegister } from './Components/Register/AdvisorRegister';
+import { ClientRegister } from './Components/Register/ClientRegister';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Home } from './Components/Home/Home';
+
+//router
+
+const router = createBrowserRouter([
+
+    {
+        path: '/',
+        element: <div><Home /></div>
+    },
+
+    {
+        path: '/advisor/login',
+        element: <div><AdvisorLogin /></div>
+    },
+    
+    {
+        path: '/client/login',
+        element: <div><ClientLogin /></div>
+    },
+    
+    {
+        path: '/Dashboard',
+        element: <div><Dashboard /></div>
+    },
+    {
+        path: '/advisor/register',
+        element: <div><AdvisorRegister /></div>
+    },
+    {
+        path: '/client/register',
+        element: <div><ClientRegister /></div>
+    },
+])
 
 function App() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [sessionValue, setSessionValue] = useState("");
-
-    const login = async () => {
-        const response = await fetch('https://localhost:7211/api/Advisor/Login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            console.log("Login successful");
-        } else {
-            console.log("Login failed");
-        }
-    };
-
-    const loginWithGoogle = () => {
-        window.location.href = 'https://localhost:7211/api/Advisor/LoginWithGoogle';
-    };
-
-    const testSession = async () => {
-        const response = await fetch('https://localhost:7211/api/SessionTesting/get-session', {
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            const value = await response.text();
-            setSessionValue(value);
-        } else {
-            console.log("Session test failed");
-        }
-    };
-
     return (
         <div>
-            <div>
-                <h2>Login</h2>
-                <input type="text" placeholder="Username" onChange={e => setUsername(e.target.value)} />
-                <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-                <button onClick={login}>Login</button>
-                <button onClick={loginWithGoogle}>Login with Google</button>
-            </div>
-            <div>
-                <h2>Test Session</h2>
-                <button onClick={testSession}>Test Session</button>
-                <p>Session value: {sessionValue}</p>
-            </div>
+            <RouterProvider router={router} />
         </div>
     );
 }

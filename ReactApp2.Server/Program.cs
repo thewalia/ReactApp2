@@ -39,7 +39,7 @@ namespace ReactApp2.Server
 
             // Register AdvisorDataAccess as a singleton
             builder.Services.AddSingleton(new AdvisorDataAccess(connectionString));
-            builder.Services.AddSingleton(new ClientDataAccess(connectionString));
+            builder.Services.AddSingleton(new CustomerDataAccess(connectionString));
 
             builder.Services.AddAuthentication(options =>
             {

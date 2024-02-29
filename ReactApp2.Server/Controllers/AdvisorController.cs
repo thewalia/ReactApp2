@@ -28,7 +28,7 @@ namespace ReactApp2.Server.Controllers
 
             _dataAccess.RegisterAdvisor(advisor);
 
-            return CreatedAtAction(nameof(GetAdvisor), new { id = advisor.AdvisorId }, advisor);
+            return CreatedAtAction(nameof(GetAdvisor), new { id = advisor.AdvisorID }, advisor);
         }
 
         [HttpGet("{id}")]
@@ -50,7 +50,7 @@ namespace ReactApp2.Server.Controllers
             }
 
             // Store the username in the session
-            HttpContext.Session.SetString("username", dbAdvisor.Username);
+            HttpContext.Session.SetInt32("AdvisorID", dbAdvisor.AdvisorID);
 
             return Ok();
         }
@@ -81,14 +81,15 @@ namespace ReactApp2.Server.Controllers
             // If the advisor doesn't exist, create a new advisor
             if (advisor == null)
             {
-                advisor = new Advisor { Username = email, Password = "333" };
+                advisor = new Advisor { Email = email, Password = "333" };
                 _dataAccess.RegisterAdvisor(advisor);
             }
 
+            advisor = _dataAccess.GetAdvisorByEmail(email);
             // Store the advisor's username in the session
-            HttpContext.Session.SetString("username", advisor.Username);
+            HttpContext.Session.SetInt32("AdvisorID", advisor.AdvisorID);
 
-            return Ok();
+            return Ok("Google authentication successful with Advisor ID: " + advisor.AdvisorID + " " + email);
         }
 
 
