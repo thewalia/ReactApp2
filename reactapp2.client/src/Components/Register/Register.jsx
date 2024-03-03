@@ -7,18 +7,22 @@ import { AiOutlineSwapRight } from "react-icons/ai";
 import { FaUserShield } from "react-icons/fa";
 import video from '../../LoginAssets/video2.mp4'
 import logo from "../../LoginAssets/bird_2.jpg";
+import { useNavigate } from "react-router-dom";
 
-export const AdvisorRegister = () => {
+export const Register = () => {
 
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
+    const [userType, setUserType] = useState("advisor");
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch('https://localhost:7211/api/Advisor/Register', {
+        const response = await fetch(`https://localhost:7211/api/Authentication/Register/${userType}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,11 +34,16 @@ export const AdvisorRegister = () => {
         if (response.ok) {
             // Registration was successful
             console.log('Registration successful');
+            setRedirectToLogin(true);
         } else {
             // Registration failed
             console.log('Registration failed');
         }
     };
+
+    if (redirectToLogin) {
+        navigate('/Login');
+    }
 
   return (
     <div className="registerPage flex">
@@ -48,8 +57,8 @@ export const AdvisorRegister = () => {
 
           <div className="footerDiv flex">
           <span className="text">Have an account??</span>
-          <Link to={"/advisor/login"} >
-            <button className="btn">Login</button>
+          <Link to={"/login"} >
+              <button className="btn" style="Color:black">Login</button>
           </Link>
           </div>
         </div>
@@ -64,7 +73,15 @@ export const AdvisorRegister = () => {
                       <h3>Welcome Back!!(Advisor)</h3>
                   </div>
 
-         <form onSubmit={handleSubmit} className="form grid">
+                  <form onSubmit={handleSubmit} className="form grid">
+
+                      <div className="inputDiv">
+                          <label htmlFor="userType">User Type</label>
+                          <select id="userType" value={userType} onChange={(e) => setUserType(e.target.value)}>
+                              <option value="advisor">Advisor</option>
+                              <option value="client">Client</option>
+                          </select>
+                      </div>
       
             <div className="inputDiv">
               <label htmlFor="email">Email</label>
@@ -123,7 +140,7 @@ export const AdvisorRegister = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn flex">
+                      <button type="submit" className="btn flex" style="background-color:#AAD7D9;color:white;">
               <span>Register</span>
               <AiOutlineSwapRight className="icon" />
             </button>

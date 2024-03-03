@@ -7,6 +7,7 @@
   img {
     max-width: 100%;
     height: auto;
+
   }
   .App {
     min-height: 100vh;
@@ -20,17 +21,22 @@
   }
   
   body {
-    background-color: #f6f6f6;
+    background-color: #AAD7D9;
   }
   
   nav {
+    
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 90px;
+    
+    
   }
   .navbar-menu-container {
     display: none;
+   
+    
   }
   .navbar-links-container a {
     margin-right: 3rem;
@@ -38,6 +44,9 @@
     color: black;
     font-size: 1.1rem;
     font-weight: 600;
+  position: relative;
+
+    
   }
   .primary-button {
     padding: 0.9rem 1.75rem;
@@ -54,7 +63,7 @@
     font-size: 1.15rem;
   }
   .primary-button:hover {
-    background-color: rgb(234, 234, 234);
+    background-color: #E5E1DA;
   }
   .navbar-menu-container svg {
     font-size: 1.5rem;
@@ -73,8 +82,10 @@
     max-width: 700px;
   }
   .home-image-section {
-    max-width: 600px;
+   
+    max-width: 500px;
     flex: 1;
+    margin-left: 40px;
   }
   .home-text-section {
     flex: 1;
@@ -97,7 +108,7 @@
   }
   .secondary-button {
     padding: 1rem 2.5rem;
-    background-color: #fe9e0d;
+    background-color: #92C7CF;
     outline: none;
     border: none;
     border-radius: 5rem;
@@ -115,10 +126,11 @@
     font-size: 1.5rem;
   }
   .secondary-button:hover {
-    background-color: #e48f0f;
+     background-color: #FBF9F1 ;
+     color: #484848;
   }
   .about-section-container {
-    margin-top: 20rem;
+    margin-top: 7rem;
     position: relative;
     display: flex;
     align-items: center;
@@ -130,18 +142,19 @@
     z-index: -2;
   }
   .about-section-image-container {
-    flex: 0.9;
-    margin-right: 1rem;
+    flex: 1;
+    margin-right: 3rem;
+    border-radius: 2px;
   }
   .about-section-text-container {
     flex: 1;
     justify-content: center;
     display: flex;
-    flex-direction: column;
+    flex-direction:column;
   }
   .primary-subheading {
     font-weight: 700;
-    color: #fe9e0d;
+    color: #FBF9F1;
     font-size: 1.15rem;
   }
   .about-buttons-container {
@@ -261,7 +274,7 @@
     margin-top: 1.5rem;
   }
   .work-section-wrapper {
-    margin-top: 15rem;
+    margin-top: 7rem;
   }
   .work-section-top p {
     text-align: center;
@@ -325,9 +338,12 @@
     }
     .navbar-links-container {
       display: none;
+     
+        
     }
     .navbar-menu-container {
       display: flex;
+      
     }
     .home-bannerImage-container {
       max-width: 450px;

@@ -7,16 +7,20 @@ import { FaUserShield } from "react-icons/fa";
 import { BsFillShieldLockFill } from "react-icons/bs";
 import { AiOutlineSwapRight } from "react-icons/ai";
 import video from "../../LoginAssets/video2.mp4";
+import { useNavigate } from "react-router-dom";
 
-export const AdvisorLogin = () => {
+export const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userType, setUserType] = useState("advisor");
+    const [redirectToDashboard, setRedirectToDashboard] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch('https://localhost:7211/api/Advisor/Login', {
+        const response = await fetch(`https://localhost:7211/api/Authentication/Login/${userType}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -28,14 +32,22 @@ export const AdvisorLogin = () => {
         if (response.ok) {
             // Login was successful
             console.log('Login successful');
+            const data = await response.json();
+            localStorage.setItem('userId', data.id);
+            localStorage.setItem('userType', userType);
+            setRedirectToDashboard(true);
         } else {
             // Login failed
             console.log('Login failed');
         }
     };
 
+    if (redirectToDashboard) {
+        navigate('/dashboard');
+    }
+
     const handleGoogleLogin = () => {
-        window.open('https://localhost:7211/api/Advisor/LoginWithGoogle', '_blank');
+        window.open(`https://localhost:7211/api/Authentication/LoginWithGoogle/${userType}`, '_blank');
     };
 
 
@@ -51,8 +63,8 @@ export const AdvisorLogin = () => {
 
           <div className="footerDiv flex">
             <span className="text">New?? Way to success!!</span>
-            <Link to={"/advisor/register"}>
-              <button className="btn">Sign Up</button>
+            <Link to={"/register"}>
+                 <button className="btn" style="Color:black;">Sign Up</button>
             </Link>
           </div>
         </div>
@@ -65,10 +77,19 @@ export const AdvisorLogin = () => {
 
           <form onSubmit={handleSubmit} className="form grid">
             <span className="inputDiv">
-                          <button type="submit" onClick={handleGoogleLogin} className="btn flex">
+                          <button type="submit" onClick={handleGoogleLogin} className="btn flex" style="background-color:#AAD7D9;color:white;">
                 Login with Google
               </button>
             </span>
+
+                      <div className="inputDiv">
+                          <label htmlFor="userType">User Type</label>
+                          <select id="userType" value={userType} onChange={(e) => setUserType(e.target.value)}>
+                              <option value="advisor">Advisor</option>
+                              <option value="client">Client</option>
+                          </select>
+                      </div>
+
             <div className="inputDiv">
               <label htmlFor="username">Email</label>
               <div className="input flex">
@@ -97,7 +118,7 @@ export const AdvisorLogin = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn flex">
+                      <button type="submit" className="btn flex" style="background-color:#AAD7D9;color:white;">
               <span>Login</span>
               <AiOutlineSwapRight className="icon" />
             </button>

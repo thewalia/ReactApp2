@@ -107,5 +107,24 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public void DeleteAdvisor(int advisorId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("Delete__Advisor", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@AdvisorId", advisorId);
+
+                    // ExecuteNonQuery since it's a DELETE operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }

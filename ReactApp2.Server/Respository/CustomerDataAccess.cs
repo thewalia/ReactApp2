@@ -111,5 +111,24 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public void DeleteCustomer(int customerId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("Delete__Customer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    // ExecuteNonQuery since it's a DELETE operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
