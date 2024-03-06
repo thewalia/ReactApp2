@@ -13,6 +13,128 @@ namespace ReactApp2.Server.Respository
             _connectionString = connectionString;
         }
 
+        public List<Customer> GetAllClients()
+        {
+            List<Customer> customers = new List<Customer>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetAllClientsWithRiskType", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            customers.Add(new Customer
+                            {
+                                CustomerID = (int)reader["CustomerID"],
+                                UserID = (int)reader["UserID"],
+                                RiskType = reader["RiskType"].ToString() // New line
+                            });
+                        }
+                    }
+                }
+            }
+
+            return customers;
+        }
+
+        public AdvisorPlan GetAdvisorPlanByCustomer(int customerId)
+        {
+            AdvisorPlan advisorPlan = null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetAdvisorPlanByCustomer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            advisorPlan = new AdvisorPlan
+                            {
+                                PortfolioID = (int)reader["PortfolioID"],
+                                AdvisorResponse = reader["AdvisorResponse"].ToString(),
+                                Approval = (int)reader["Approval"]
+                            };
+                        }
+                    }
+                }
+            }
+
+            return advisorPlan;
+        }
+
+        public void UpdateAdvisorPlanApproval(int customerId, int approval)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("UpdateAdvisorPlanApproval", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+                    command.Parameters.AddWithValue("@Approval", approval);
+
+                    // ExecuteNonQuery since it's an UPDATE operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<Investment> GetInvestmentsByCustomer(int customerId)
+        {
+            List<Investment> investments = new List<Investment>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetInvestmentsByCustomer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            investments.Add(new Investment
+                            {
+                                InvestmentId = (int)reader["InvestmentId"],
+                                PortfolioId = (int)reader["PortfolioId"],
+                                AssetId = (int)reader["AssetId"],
+                                PurchasePrice = (int)reader["PurchasePrice"],
+                                Quantity = (int)reader["Quantity"]
+                            });
+                        }
+                    }
+                }
+            }
+
+            return investments;
+        }
+
+
         public void RegisterClient(User client)
         {
 

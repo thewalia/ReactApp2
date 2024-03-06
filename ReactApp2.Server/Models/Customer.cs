@@ -8,6 +8,8 @@ namespace ReactApp2.Server.Models
         public int CustomerID { get; set; }
 
         public int UserID { get; set; }
-        
+
+        public string RiskType { get; set; } 
+
     }
 }

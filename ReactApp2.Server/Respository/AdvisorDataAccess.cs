@@ -124,6 +124,135 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public void AssignAdvisorToCustomer(int advisorId, int customerId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("AssignAdvisorToCustomer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@AdvisorId", advisorId);
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    // ExecuteNonQuery since it's an UPDATE operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<Portfolio> GetCustomersByAdvisor(int advisorId)
+        {
+            var portfolios = new List<Portfolio>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetCustomersByAdvisor", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@AdvisorId", advisorId);
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            portfolios.Add(new Portfolio
+                            {
+                                CustomerID = (int)reader["CustomerID"],
+                                RiskType = reader["RiskType"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            return portfolios;
+        }
+
+        public void UpdateAdvisorPlan(int customerId, AdvisorPlan plan)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("UpdateAdvisorPlan", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+                    command.Parameters.AddWithValue("@AdvisorResponse", plan.AdvisorResponse);
+
+                    // ExecuteNonQuery since it's an UPDATE operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<Market> GetAvailableAssets()
+        {
+            List<Market> assets = new List<Market>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetAvailableAssets", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            assets.Add(new Market
+                            {
+                                AssetId = (int)reader["AssetId"],
+                                AssetType = reader["AssetType"].ToString(),
+                                Name = reader["Name"].ToString(),
+                                CurrentPrice = (int)reader["CurrentPrice"]
+                            });
+                        }
+                    }
+                }
+            }
+
+            return assets;
+        }
+
+        public void AddInvestments(int advisorId, List<int> assetIds)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                foreach (int assetId in assetIds)
+                {
+                    using (SqlCommand command = new SqlCommand("AddInvestment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parameters
+                        command.Parameters.AddWithValue("@AdvisorId", advisorId);
+                        command.Parameters.AddWithValue("@AssetId", assetId);
+
+                        // ExecuteNonQuery since it's an INSERT operation
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
 
         public void DeleteAdvisor(int advisorId)
         {

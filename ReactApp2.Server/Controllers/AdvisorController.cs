@@ -36,6 +36,88 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        [HttpPost("AssignCustomer/{customerId}")]
+        public ActionResult AssignAdvisorToCustomer(int customerId)
+        {
+            try
+            {
+                // Retrieve the advisor id from the session
+                int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
+
+                _dataAccess.AssignAdvisorToCustomer(advisorId, customerId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("{id}/Customers")]
+        public ActionResult<List<Portfolio>> GetCustomersByAdvisor(int id)
+        {
+            try
+            {
+                var portfolios = _dataAccess.GetCustomersByAdvisor(id);
+                return Ok(portfolios);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("UpdatePlan/{customerId}")]
+        public ActionResult UpdateAdvisorPlan(int customerId, [FromBody] AdvisorPlan plan)
+        {
+            try
+            {
+                _dataAccess.UpdateAdvisorPlan(customerId, plan);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("AvailableAssets")]
+        public ActionResult<List<Market>> GetAvailableAssets()
+        {
+            try
+            {
+                var assets = _dataAccess.GetAvailableAssets();
+                return Ok(assets);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("AddInvestments")]
+        public ActionResult AddInvestments([FromBody] List<int> assetIds)
+        {
+            try
+            {
+                // Retrieve the advisor id from the session
+                int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
+
+                _dataAccess.AddInvestments(advisorId, assetIds);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
         [HttpGet("{id}")]
         public ActionResult<Advisor> GetAdvisor(int id)
         {

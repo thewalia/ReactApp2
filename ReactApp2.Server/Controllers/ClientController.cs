@@ -36,13 +36,69 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
-
-        [HttpGet("{id}")]
-        public ActionResult<Customer> GetClient(int id)
+        [HttpGet]
+        public ActionResult<List<Customer>> GetAllClients()
         {
-            // TODO: Implement this method
-            return NotFound();
+            try
+            {
+                var customers = _dataAccess.GetAllClients();
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
         }
+
+        [HttpGet("{id}/AdvisorPlan")]
+        public ActionResult<AdvisorPlan> GetAdvisorPlanByCustomer(int id)
+        {
+            try
+            {
+                var advisorPlan = _dataAccess.GetAdvisorPlanByCustomer(id);
+                return Ok(advisorPlan);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("{id}/AdvisorPlanApproval")]
+        public ActionResult UpdateAdvisorPlanApproval(int id, [FromBody] int approval)
+        {
+            try
+            {
+                _dataAccess.UpdateAdvisorPlanApproval(id, approval);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("Investments")]
+        public ActionResult<List<Investment>> GetInvestmentsByCustomer()
+        {
+            try
+            {
+                // Retrieve the customer id from the session
+                int customerId = HttpContext.Session.GetInt32("CustomerID").Value;
+
+                var investments = _dataAccess.GetInvestmentsByCustomer(customerId);
+                return Ok(investments);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
 
     }
 }
