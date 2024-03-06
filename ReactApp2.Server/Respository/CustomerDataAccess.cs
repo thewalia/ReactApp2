@@ -13,7 +13,7 @@ namespace ReactApp2.Server.Respository
             _connectionString = connectionString;
         }
 
-        public void RegisterClient(Customer client)
+        public void RegisterClient(User client)
         {
 
             // Validate password length and complexity
@@ -23,7 +23,7 @@ namespace ReactApp2.Server.Respository
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("Insertcustomer", connection))
+                using (SqlCommand command = new SqlCommand("InsertCustomer", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -34,6 +34,7 @@ namespace ReactApp2.Server.Respository
                     command.Parameters.AddWithValue("@LastName", client.LastName);
                     command.Parameters.AddWithValue("@Email", client.Email);
                     command.Parameters.AddWithValue("@Password", client.Password);
+                    command.Parameters.AddWithValue("@UserType", client.UserType);
 
                     // ExecuteNonQuery since it's an INSERT operation
                     command.ExecuteNonQuery();
@@ -41,7 +42,7 @@ namespace ReactApp2.Server.Respository
             }
         }
 
-        public Customer ValidateClient(Customer client)
+        public Customer ValidateClient(User client)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -63,8 +64,7 @@ namespace ReactApp2.Server.Respository
                             return new Customer
                             {
                                 CustomerID = (int)reader["CustomerID"],
-                                Email = (string)reader["Email"],
-                                Password = (string)reader["Password"]
+                                UserID = (int)reader["UserID"]
                             };
                         }
                         else
@@ -82,13 +82,12 @@ namespace ReactApp2.Server.Respository
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("ValidateClient", connection))
+                using (SqlCommand command = new SqlCommand("GetClientByEmail", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Parameters
                     command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@Password", "333");
 
                     // ExecuteReader since it's a SELECT operation
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -98,8 +97,7 @@ namespace ReactApp2.Server.Respository
                             return new Customer
                             {
                                 CustomerID = (int)reader["CustomerID"],
-                                Email = (string)reader["Email"],
-                                Password = (string)reader["Password"]
+                                UserID = (int)reader["UserID"]
                             };
                         }
                         else
@@ -111,13 +109,34 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public void UpdateRiskType(int customerId, string riskType)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("UpdateRiskType", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+                    command.Parameters.AddWithValue("@RiskType", riskType);
+
+                    // ExecuteNonQuery since it's an UPDATE operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         public void DeleteCustomer(int customerId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("Delete__Customer", connection))
+                using (SqlCommand command = new SqlCommand("DeleteCustomer", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 

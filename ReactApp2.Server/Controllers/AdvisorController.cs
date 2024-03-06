@@ -21,7 +21,20 @@ namespace ReactApp2.Server.Controllers
             _dataAccess = dataAccess;
         }
 
-        
+        [HttpPost("{id}/Experience")]
+        public ActionResult InsertAdvisorExp(int id, [FromBody] AdvisorExp advisorExp)
+        {
+            try
+            {
+                _dataAccess.InsertAdvisorExp(id, advisorExp.Qualifications, advisorExp.ExperienceYears);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
         [HttpGet("{id}")]
         public ActionResult<Advisor> GetAdvisor(int id)

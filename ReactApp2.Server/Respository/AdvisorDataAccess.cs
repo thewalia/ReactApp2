@@ -13,30 +13,31 @@ namespace ReactApp2.Server.Respository
             _connectionString = connectionString;
         }
 
-        public void RegisterAdvisor(Advisor advisor)
+        public void RegisterAdvisor(User advisor)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("Insertadvisor", connection))
+                using (SqlCommand command = new SqlCommand("InsertAdvisor", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-
-                    // Parameters
 
                     command.Parameters.AddWithValue("@FirstName", advisor.FirstName);
                     command.Parameters.AddWithValue("@LastName", advisor.LastName);
                     command.Parameters.AddWithValue("@Email", advisor.Email);
                     command.Parameters.AddWithValue("@Password", advisor.Password);
+                    command.Parameters.AddWithValue("@UserType", "advisor");
+                   
 
                     // ExecuteNonQuery since it's an INSERT operation
                     command.ExecuteNonQuery();
+
                 }
             }
         }
 
-        public Advisor ValidateAdvisor(Advisor advisor)
+        public Advisor ValidateAdvisor(User advisor)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -58,10 +59,7 @@ namespace ReactApp2.Server.Respository
                             return new Advisor
                             {
                                 AdvisorID = (int)reader["AdvisorID"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                Email = (string)reader["Email"],
-                                Password = (string)reader["Password"]
+                                UserID = (int)reader["UserID"]
                             };
                         }
                         else
@@ -78,13 +76,12 @@ namespace ReactApp2.Server.Respository
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("ValidateAdvisor", connection))
+                using (SqlCommand command = new SqlCommand("GetAdvisorByEmail", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Parameters
                     command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@Password", "333");
 
                     // ExecuteReader since it's a SELECT operation
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -93,9 +90,8 @@ namespace ReactApp2.Server.Respository
                         {
                             return new Advisor
                             {
-                                AdvisorID = (int)reader["AdvisorId"],
-                                Email = (string)reader["Email"],
-                                Password = (string)reader["Password"]
+                                AdvisorID = (int)reader["AdvisorID"],
+                                UserID = (int)reader["UserID"]
                             };
                         }
                         else
@@ -107,13 +103,35 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public void InsertAdvisorExp(int advisorId, string qualifications, int experienceYears)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("InsertAdvisorExp", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@AdvisorId", advisorId);
+                    command.Parameters.AddWithValue("@Qualifications", qualifications);
+                    command.Parameters.AddWithValue("@ExperienceYears", experienceYears);
+
+                    // ExecuteNonQuery since it's an INSERT operation
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         public void DeleteAdvisor(int advisorId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                using (SqlCommand command = new SqlCommand("Delete__Advisor", connection))
+                using (SqlCommand command = new SqlCommand("DeleteAdvisor", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -125,6 +143,7 @@ namespace ReactApp2.Server.Respository
                 }
             }
         }
+
 
     }
 }

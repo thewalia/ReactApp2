@@ -21,6 +21,22 @@ namespace ReactApp2.Server.Controllers
             _dataAccess = dataAccess;
         }
 
+        [HttpPost("{id}/RiskType")]
+        public ActionResult UpdateRiskType(int id, [FromBody] string riskType)
+        {
+            try
+            {
+                _dataAccess.UpdateRiskType(id, riskType);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
         [HttpGet("{id}")]
         public ActionResult<Customer> GetClient(int id)
         {

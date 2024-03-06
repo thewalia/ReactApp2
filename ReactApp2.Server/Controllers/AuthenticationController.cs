@@ -23,6 +23,7 @@ namespace ReactApp2.Server.Controllers
             _advisorDataAccess = advisorDataAccess;
         }
 
+        //DONE
         [HttpPost("Register/{userType}")]
         public ActionResult Register(string userType, User user)
         {
@@ -30,20 +31,21 @@ namespace ReactApp2.Server.Controllers
 
             if (userType.ToLower() == "client")
             {
-                var client = new Customer { LastName=user.LastName, FirstName=user.FirstName ,Email = user.Email, Password = user.Password };
+                var client = new User { LastName=user.LastName, FirstName=user.FirstName ,Email = user.Email, Password = user.Password, UserType = "client"};
                 _customerDataAccess.RegisterClient(client);
-                return CreatedAtAction(nameof(Register), new { id = client.CustomerID }, client);
+                return Ok();
             }
             else if (userType.ToLower() == "advisor")
             {
-                var advisor = new Advisor { LastName = user.LastName, FirstName = user.FirstName, Email = user.Email, Password = user.Password };
+                var advisor = new User { LastName = user.LastName, FirstName = user.FirstName, Email = user.Email, Password = user.Password, UserType = "advisor" };
                 _advisorDataAccess.RegisterAdvisor(advisor);
-                return CreatedAtAction(nameof(Register), new { id = advisor.AdvisorID }, advisor);
+                return Ok();
             }
 
             return BadRequest("Invalid user type");
         }
 
+        //DONE
         // TODO: Implement GetClient and GetAdvisor methods
 
         [HttpPost("Login/{userType}")]
@@ -51,7 +53,7 @@ namespace ReactApp2.Server.Controllers
         {
             if (userType.ToLower() == "client")
             {
-                var client = new Customer { Email = user.Email, Password = user.Password };
+                var client = new User { Email = user.Email, Password = user.Password };
                 var dbClient = _customerDataAccess.ValidateClient(client);
 
                 if (dbClient == null)
@@ -64,7 +66,7 @@ namespace ReactApp2.Server.Controllers
             }
             else if (userType.ToLower() == "advisor")
             {
-                var advisor = new Advisor { Email = user.Email, Password = user.Password };
+                var advisor = new User { Email = user.Email, Password = user.Password };
                 var dbAdvisor = _advisorDataAccess.ValidateAdvisor(advisor);
 
                 if (dbAdvisor == null)
@@ -79,10 +81,9 @@ namespace ReactApp2.Server.Controllers
             {
                 return BadRequest("Invalid user type");
             }
-
-            return Ok();
         }
 
+        //DONE
         [HttpGet("LoginWithGoogle/{userType}")]
         public IActionResult LoginWithGoogle(string userType)
         {
@@ -95,6 +96,7 @@ namespace ReactApp2.Server.Controllers
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
+        //DONE
         [HttpGet("GoogleResponse")]
         public async Task<IActionResult> GoogleResponse(string userType)
         {
@@ -116,14 +118,13 @@ namespace ReactApp2.Server.Controllers
                 // If the client doesn't exist, create a new client
                 if (client == null)
                 {
-                    client = new Customer { Email = email, Password = "333" };
-                    _customerDataAccess.RegisterClient(client);
+                    var newClient = new User { Email = email, Password = "333", UserType = "client" };
+                    _customerDataAccess.RegisterClient(newClient);
+                    client = _customerDataAccess.GetClientByEmail(email);
                 }
 
-                client = _customerDataAccess.GetClientByEmail(email);
-
                 // Store the client's username in the session
-                HttpContext.Session.SetInt32("CustomerID", client.CustomerID);
+                HttpContext.Session.SetInt32("ClientID", client.CustomerID);
 
                 return Ok("Google authentication successful with Customer ID: " + client.CustomerID + " " + email);
             }
@@ -135,11 +136,10 @@ namespace ReactApp2.Server.Controllers
                 // If the advisor doesn't exist, create a new advisor
                 if (advisor == null)
                 {
-                    advisor = new Advisor { Email = email, Password = "333" };
-                    _advisorDataAccess.RegisterAdvisor(advisor);
+                    var newAdvisor = new User { Email = email, Password = "333", UserType = "advisor" };
+                    _advisorDataAccess.RegisterAdvisor(newAdvisor);
+                    advisor = _advisorDataAccess.GetAdvisorByEmail(email);
                 }
-
-                advisor = _advisorDataAccess.GetAdvisorByEmail(email);
 
                 // Store the advisor's username in the session
                 HttpContext.Session.SetInt32("AdvisorID", advisor.AdvisorID);
@@ -152,6 +152,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //DONE
         [HttpDelete("DeleteUser/{userType}/{id}")]
         public ActionResult Delete(string userType, int id)
         {

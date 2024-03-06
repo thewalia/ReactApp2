@@ -8,17 +8,17 @@ namespace ReactApp2.Server.Models
         {
             FirstName = string.Empty;
             LastName = string.Empty;
-        }
+            UserType = string.Empty;
+    }
 
+        public int UserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
-        [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string UserType { get; set; }
     }
 }
