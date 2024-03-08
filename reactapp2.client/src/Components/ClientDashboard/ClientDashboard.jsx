@@ -1,8 +1,8 @@
 import React from 'react';
-import './Dashboard.css';
+//import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 
-export const Dashboard = () => {
+export const ClientDashboard = () => {
     const navigate = useNavigate();
 
     const deleteAccount = async () => {

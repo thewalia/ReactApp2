@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "../Login/Login.css";
 import "../../App.css";
 import { Link } from "react-router-dom";
@@ -16,6 +16,20 @@ export const Login = () => {
     const [userType, setUserType] = useState("advisor");
     const [redirectToDashboard, setRedirectToDashboard] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        window.addEventListener('message', handlePostMessage);
+        return () => {
+            window.removeEventListener('message', handlePostMessage);
+        };
+    }, []);
+
+    const handlePostMessage = (event) => {
+        if (event.data === 'login successful') {
+            setRedirectToDashboard(true);
+        }
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,7 +57,11 @@ export const Login = () => {
     };
 
     if (redirectToDashboard) {
-        navigate('/dashboard');
+        if (userType === 'advisor') {
+            navigate('/advisorform');
+        } else if (userType === 'client') {
+            navigate('/clientform');
+        }
     }
 
     const handleGoogleLogin = () => {

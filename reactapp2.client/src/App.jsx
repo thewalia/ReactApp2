@@ -1,9 +1,14 @@
 import './App.css';
-import { Dashboard } from './Components/Dashboard/Dashboard';
+import { AdvisorDashboard } from './Components/AdvisorDashboard/AdvisorDashboard';
+import Investment from './Components/AdvisorDashboard/Investment';
+import { ClientDashboard } from './Components/ClientDashboard/ClientDashboard';
 import { Login } from './Components/Login/Login';
 import { Register } from './Components/Register/Register';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './Components/Home/Home';
+import AdvisorForm from './Components/AdvisorForm/AdvisorForm';
+import ClientForm from './Components/ClientForm/ClientForm';
+import ListOfClient from './Components/AdvisorForm/ListOfClient/ListOfClient'; // Import ListOfClient
 
 //router
 
@@ -20,13 +25,50 @@ const router = createBrowserRouter([
     },
 
     {
-        path: '/Dashboard',
-        element: <div><Dashboard /></div>
+        path: '/AdvisorDashboard',
+        children: [
+            {
+                path: '', // Add this route for the exact /advisorform path
+                element: <div><AdvisorDashboard /></div>
+            },
+            {
+                path: 'investment', // This will match /advisorform/listofclients
+                element: <div><Investment /></div>
+            }
+        ]
+       
+    },
+
+    {
+        path: '/ClientDashboard',
+        element: <div><ClientDashboard /></div>
     },
 
     {
         path: '/register',
         element: <div><Register /></div>
+    },
+
+    {
+
+        path: '/advisorform',
+        children: [
+            {
+                path: '', // Add this route for the exact /advisorform path
+                element: <div><AdvisorForm /></div>
+            },
+            {
+                path: 'listofclients', // This will match /advisorform/listofclients
+                element: <div><ListOfClient /></div>
+            }
+        ]
+        
+    },
+
+    {
+
+        path: '/clientform',
+        element: <div><ClientForm /></div>
     }
 ])
 

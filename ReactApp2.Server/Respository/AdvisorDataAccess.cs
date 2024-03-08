@@ -167,7 +167,11 @@ namespace ReactApp2.Server.Respository
                             portfolios.Add(new Portfolio
                             {
                                 CustomerID = (int)reader["CustomerID"],
-                                RiskType = reader["RiskType"].ToString()
+                                AdvisorID = (int)reader["AdvisorID"],
+                                PortfolioName = reader["PortfolioName"].ToString(),
+                                RiskType = reader["RiskType"].ToString(),
+                                CurrentValue = (int)reader["CurrentValue"],
+                                TotalInvestedValue = (int)reader["TotalInvestedValue"]
                             });
                         }
                     }

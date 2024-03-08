@@ -24,6 +24,7 @@ namespace ReactApp2.Server.Controllers
         }
 
         //DONE
+        //Working
         [HttpPost("Register/{userType}")]
         public ActionResult Register(string userType, User user)
         {
@@ -46,6 +47,7 @@ namespace ReactApp2.Server.Controllers
         }
 
         //DONE
+        //Working
         // TODO: Implement GetClient and GetAdvisor methods
 
         [HttpPost("Login/{userType}")]
@@ -118,7 +120,7 @@ namespace ReactApp2.Server.Controllers
                 // If the client doesn't exist, create a new client
                 if (client == null)
                 {
-                    var newClient = new User { Email = email, Password = "333", UserType = "client" };
+                    var newClient = new User { FirstName = "",LastName = "", Email = email, Password = "333", UserType = "client" };
                     _customerDataAccess.RegisterClient(newClient);
                     client = _customerDataAccess.GetClientByEmail(email);
                 }
@@ -126,7 +128,9 @@ namespace ReactApp2.Server.Controllers
                 // Store the client's username in the session
                 HttpContext.Session.SetInt32("ClientID", client.CustomerID);
 
-                return Ok("Google authentication successful with Customer ID: " + client.CustomerID + " " + email);
+                return Content("<script>window.opener.postMessage('login successful', '*'); window.close();</script>", "text/html");
+
+                //return Ok("Google authentication successful with Customer ID: " + client.CustomerID + " " + email);
             }
             else if (userType.ToLower() == "advisor")
             {
@@ -136,7 +140,7 @@ namespace ReactApp2.Server.Controllers
                 // If the advisor doesn't exist, create a new advisor
                 if (advisor == null)
                 {
-                    var newAdvisor = new User { Email = email, Password = "333", UserType = "advisor" };
+                    var newAdvisor = new User { FirstName = "",LastName = "",Email = email, Password = "333", UserType = "advisor" };
                     _advisorDataAccess.RegisterAdvisor(newAdvisor);
                     advisor = _advisorDataAccess.GetAdvisorByEmail(email);
                 }
@@ -144,7 +148,8 @@ namespace ReactApp2.Server.Controllers
                 // Store the advisor's username in the session
                 HttpContext.Session.SetInt32("AdvisorID", advisor.AdvisorID);
 
-                return Ok("Google authentication successful with Advisor ID: " + advisor.AdvisorID + " " + email);
+                return Content("<script>window.opener.postMessage('login successful', '*'); window.close();</script>", "text/html");
+                //return Ok("Google authentication successful with Advisor ID: " + advisor.AdvisorID + " " + email);
             }
             else
             {
@@ -153,6 +158,7 @@ namespace ReactApp2.Server.Controllers
         }
 
         //DONE
+        //Working
         [HttpDelete("DeleteUser/{userType}/{id}")]
         public ActionResult Delete(string userType, int id)
         {

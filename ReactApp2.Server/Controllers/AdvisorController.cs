@@ -21,12 +21,16 @@ namespace ReactApp2.Server.Controllers
             _dataAccess = dataAccess;
         }
 
-        [HttpPost("{id}/Experience")]
-        public ActionResult InsertAdvisorExp(int id, [FromBody] AdvisorExp advisorExp)
+        //Working
+        [HttpPost("Experience")]
+        public ActionResult InsertAdvisorExp([FromBody] AdvisorExp advisorExp)
         {
             try
             {
-                _dataAccess.InsertAdvisorExp(id, advisorExp.Qualifications, advisorExp.ExperienceYears);
+                // Retrieve the advisor id from the session
+                int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
+
+                _dataAccess.InsertAdvisorExp(advisorId, advisorExp.Qualifications, advisorExp.ExperienceYears);
                 return Ok();
             }
             catch (Exception ex)
@@ -36,6 +40,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpPost("AssignCustomer/{customerId}")]
         public ActionResult AssignAdvisorToCustomer(int customerId)
         {
@@ -54,12 +59,14 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
-        [HttpGet("{id}/Customers")]
-        public ActionResult<List<Portfolio>> GetCustomersByAdvisor(int id)
+        //Working
+        [HttpGet("Customers")]
+        public ActionResult<List<Portfolio>> GetCustomersByAdvisor()
         {
             try
             {
-                var portfolios = _dataAccess.GetCustomersByAdvisor(id);
+                int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
+                var portfolios = _dataAccess.GetCustomersByAdvisor(advisorId);
                 return Ok(portfolios);
             }
             catch (Exception ex)
@@ -69,6 +76,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpPost("UpdatePlan/{customerId}")]
         public ActionResult UpdateAdvisorPlan(int customerId, [FromBody] AdvisorPlan plan)
         {
@@ -84,6 +92,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpGet("AvailableAssets")]
         public ActionResult<List<Market>> GetAvailableAssets()
         {
@@ -99,6 +108,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpPost("AddInvestments")]
         public ActionResult AddInvestments([FromBody] List<int> assetIds)
         {
@@ -116,7 +126,6 @@ namespace ReactApp2.Server.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
 
         [HttpGet("{id}")]
         public ActionResult<Advisor> GetAdvisor(int id)

@@ -21,6 +21,7 @@ namespace ReactApp2.Server.Controllers
             _dataAccess = dataAccess;
         }
 
+        //Working
         [HttpPost("{id}/RiskType")]
         public ActionResult UpdateRiskType(int id, [FromBody] string riskType)
         {
@@ -36,6 +37,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpGet]
         public ActionResult<List<Customer>> GetAllClients()
         {
@@ -51,6 +53,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpGet("{id}/AdvisorPlan")]
         public ActionResult<AdvisorPlan> GetAdvisorPlanByCustomer(int id)
         {
@@ -66,6 +69,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpPost("{id}/AdvisorPlanApproval")]
         public ActionResult UpdateAdvisorPlanApproval(int id, [FromBody] int approval)
         {
@@ -81,13 +85,14 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpGet("Investments")]
         public ActionResult<List<Investment>> GetInvestmentsByCustomer()
         {
             try
             {
                 // Retrieve the customer id from the session
-                int customerId = HttpContext.Session.GetInt32("CustomerID").Value;
+                int customerId = HttpContext.Session.GetInt32("ClientID").Value;
 
                 var investments = _dataAccess.GetInvestmentsByCustomer(customerId);
                 return Ok(investments);
