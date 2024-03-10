@@ -127,6 +127,42 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        [HttpDelete("SellInvestments")]
+        public ActionResult SellInvestments([FromBody] List<int> assetIds)
+        {
+            try
+            {
+                // Retrieve the advisor id from the session
+                int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
+
+                _dataAccess.SellInvestments(advisorId, assetIds);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("ClientInvestments")]
+        public ActionResult<List<InvestmentDetail>> GetClientInvestments()
+        {
+            try
+            {
+                int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
+                var investmentDetails = _dataAccess.GetClientInvestments(advisorId);
+                return Ok(investmentDetails);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
+
         [HttpGet("{id}")]
         public ActionResult<Advisor> GetAdvisor(int id)
         {

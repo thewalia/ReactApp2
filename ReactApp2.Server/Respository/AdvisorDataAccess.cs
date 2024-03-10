@@ -256,6 +256,75 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public void SellInvestments(int advisorId, List<int> assetIds)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                foreach (int assetId in assetIds)
+                {
+                    using (SqlCommand command = new SqlCommand("SellInvestment", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parameters
+                        command.Parameters.AddWithValue("@AdvisorId", advisorId);
+                        command.Parameters.AddWithValue("@AssetId", assetId);
+
+                        // ExecuteNonQuery since it's an UPDATE operation
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public List<InvestmentDetail> GetClientInvestments(int advisorId)
+        {
+            List<InvestmentDetail> investmentDetails = new List<InvestmentDetail>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetClientInvestments", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@AdvisorId", advisorId);
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            investmentDetails.Add(new InvestmentDetail
+                            {
+                                Investment = new Investment
+                                {
+                                    InvestmentId = (int)reader["InvestmentId"],
+                                    PortfolioId = (int)reader["PortfolioId"],
+                                    AssetId = (int)reader["AssetId"],
+                                    PurchasePrice = (int)reader["PurchasePrice"],
+                                    Quantity = (int)reader["Quantity"]
+                                },
+                                Market = new Market
+                                {
+                                    AssetId = (int)reader["AssetId"],
+                                    AssetType = reader["AssetType"].ToString(),
+                                    Name = reader["Name"].ToString(),
+                                    CurrentPrice = (int)reader["CurrentPrice"]
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            return investmentDetails;
+        }
+
 
 
         public void DeleteAdvisor(int advisorId)
