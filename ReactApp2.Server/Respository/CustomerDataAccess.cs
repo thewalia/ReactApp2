@@ -271,5 +271,42 @@ namespace ReactApp2.Server.Respository
             }
         }
 
+        public List<Portfolio> GetCustomersByCustomerID(int customerId)
+        {
+            var portfolios = new List<Portfolio>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetCustomersByCustomerID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            portfolios.Add(new Portfolio
+                            {
+                                CustomerID = (int)reader["CustomerID"],
+                                AdvisorID = (int)reader["AdvisorID"],
+                                PortfolioName = reader["PortfolioName"].ToString(),
+                                RiskType = reader["RiskType"].ToString(),
+                                CurrentValue = (int)reader["CurrentValue"],
+                                //TotalInvestedValue = (int)reader["TotalInvestedValue"]
+                            });
+                        }
+                    }
+                }
+            }
+
+            return portfolios;
+        }
+
     }
 }

@@ -43,6 +43,10 @@ export const AdvisorDashboard = () => {
         navigate('/advisordashboard/investment');
     };
 
+    const navigateToSellInvestment = () => {
+        navigate('/advisordashboard/sellinvestment');
+    };
+
     return (
         <div style={{ padding: '20px', backgroundColor: '#f4f4f4' }}>
             <h1 style={{ marginBottom: '20px' }}>Advisor Dashboard</h1>
@@ -53,7 +57,7 @@ export const AdvisorDashboard = () => {
                         <p>Portfolio Name: {customer.portfolioName}</p>
                         <p>Risk Type: {customer.riskType}</p>
                         <p>Current Value: {customer.currentValue}</p>
-                        <p>Total Invested Value: {customer.totalInvestedValue}</p>
+                        
                     </div>
                     <div style={{ paddingTop: '10px' }}>
                         <textarea value={plan} onChange={(e) => setPlan(e.target.value)} placeholder="Enter plan" style={{ width: '100%', height: '80px', marginBottom: '10px' }} />
@@ -63,6 +67,7 @@ export const AdvisorDashboard = () => {
             ))}
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                 <button onClick={createInvestment}>Create Investment</button>
+                <button onClick={navigateToSellInvestment}>Sell Investment</button>
             </div>
         </div>
     );

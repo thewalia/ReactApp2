@@ -9,6 +9,7 @@ import { Home } from './Components/Home/Home';
 import AdvisorForm from './Components/AdvisorForm/AdvisorForm';
 import ClientForm from './Components/ClientForm/ClientForm';
 import ListOfClient from './Components/AdvisorForm/ListOfClient/ListOfClient'; // Import ListOfClient
+import SellInvestment from './Components/AdvisorDashboard/SellInvestment';
 
 //router
 
@@ -34,13 +35,18 @@ const router = createBrowserRouter([
             {
                 path: 'investment', // This will match /advisorform/listofclients
                 element: <div><Investment /></div>
+            },
+            {
+                path: 'sellinvestment', // This will match /advisorform/listofclients
+                element: <div><SellInvestment /></div>
             }
+
         ]
        
     },
 
     {
-        path: '/ClientDashboard',
+        path: '/clientdashboard',
         element: <div><ClientDashboard /></div>
     },
 

@@ -127,6 +127,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpDelete("SellInvestments")]
         public ActionResult SellInvestments([FromBody] List<int> assetIds)
         {
@@ -145,6 +146,7 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        //Working
         [HttpGet("ClientInvestments")]
         public ActionResult<List<InvestmentDetail>> GetClientInvestments()
         {

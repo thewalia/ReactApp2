@@ -21,13 +21,30 @@ namespace ReactApp2.Server.Controllers
             _dataAccess = dataAccess;
         }
 
-        //Working
-        [HttpPost("{id}/RiskType")]
-        public ActionResult UpdateRiskType(int id, [FromBody] string riskType)
+        [HttpGet("Customers")]
+        public ActionResult<List<Portfolio>> GetCustomersByCustomerID()
         {
             try
             {
-                _dataAccess.UpdateRiskType(id, riskType);
+                int customerId = HttpContext.Session.GetInt32("ClientID").Value;
+                var portfolios = _dataAccess.GetCustomersByCustomerID(customerId);
+                return Ok(portfolios);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        //Working
+        [HttpPost("RiskType")]
+        public ActionResult UpdateRiskType([FromBody] string riskResult)
+        {
+            try
+            {
+                int customerId = HttpContext.Session.GetInt32("ClientID").Value;
+                _dataAccess.UpdateRiskType(customerId, riskResult);
                 return Ok();
             }
             catch (Exception ex)
@@ -54,12 +71,13 @@ namespace ReactApp2.Server.Controllers
         }
 
         //Working
-        [HttpGet("{id}/AdvisorPlan")]
-        public ActionResult<AdvisorPlan> GetAdvisorPlanByCustomer(int id)
+        [HttpGet("AdvisorPlan")]
+        public ActionResult<AdvisorPlan> GetAdvisorPlanByCustomer()
         {
             try
             {
-                var advisorPlan = _dataAccess.GetAdvisorPlanByCustomer(id);
+                int customerId = HttpContext.Session.GetInt32("ClientID").Value;
+                var advisorPlan = _dataAccess.GetAdvisorPlanByCustomer(customerId);
                 return Ok(advisorPlan);
             }
             catch (Exception ex)
@@ -70,12 +88,13 @@ namespace ReactApp2.Server.Controllers
         }
 
         //Working
-        [HttpPost("{id}/AdvisorPlanApproval")]
-        public ActionResult UpdateAdvisorPlanApproval(int id, [FromBody] int approval)
+        [HttpPost("AdvisorPlanApproval")]
+        public ActionResult UpdateAdvisorPlanApproval([FromBody] int approval)
         {
             try
             {
-                _dataAccess.UpdateAdvisorPlanApproval(id, approval);
+                int customerId = HttpContext.Session.GetInt32("ClientID").Value;
+                _dataAccess.UpdateAdvisorPlanApproval(customerId, approval);
                 return Ok();
             }
             catch (Exception ex)

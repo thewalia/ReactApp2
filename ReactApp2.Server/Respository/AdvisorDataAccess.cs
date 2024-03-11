@@ -171,7 +171,7 @@ namespace ReactApp2.Server.Respository
                                 PortfolioName = reader["PortfolioName"].ToString(),
                                 RiskType = reader["RiskType"].ToString(),
                                 CurrentValue = (int)reader["CurrentValue"],
-                                TotalInvestedValue = (int)reader["TotalInvestedValue"]
+                                //TotalInvestedValue = (int)reader["TotalInvestedValue"]
                             });
                         }
                     }
