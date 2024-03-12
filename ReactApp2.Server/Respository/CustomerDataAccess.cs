@@ -44,9 +44,9 @@ namespace ReactApp2.Server.Respository
             return customers;
         }
 
-        public AdvisorPlan GetAdvisorPlanByCustomer(int customerId)
+        public List<AdvisorPlan> GetAdvisorPlanByCustomer(int customerId)
         {
-            AdvisorPlan advisorPlan = null;
+            List<AdvisorPlan> advisorPlans = new List<AdvisorPlan>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -62,20 +62,20 @@ namespace ReactApp2.Server.Respository
                     // ExecuteReader since it's a SELECT operation
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
-                            advisorPlan = new AdvisorPlan
+                            advisorPlans.Add(new AdvisorPlan
                             {
                                 PortfolioID = (int)reader["PortfolioID"],
                                 AdvisorResponse = reader["AdvisorResponse"].ToString(),
                                 Approval = (int)reader["Approval"]
-                            };
+                            });
                         }
                     }
                 }
             }
 
-            return advisorPlan;
+            return advisorPlans;
         }
 
         public void UpdateAdvisorPlanApproval(int customerId, int approval)
@@ -270,6 +270,43 @@ namespace ReactApp2.Server.Respository
                 }
             }
         }
+
+        public User GetClientInfo(int customerId)
+        {
+            User user = null;
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("GetClientInfo", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Parameters
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    // ExecuteReader since it's a SELECT operation
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new User
+                            {
+                                UserID = (int)reader["UserID"],
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                Email = reader["Email"].ToString()
+                                // Password and UserType are not included
+                            };
+                        }
+                    }
+                }
+            }
+
+            return user;
+        }
+
 
         public List<Portfolio> GetCustomersByCustomerID(int customerId)
         {

@@ -70,15 +70,14 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
-        //Working
         [HttpGet("AdvisorPlan")]
-        public ActionResult<AdvisorPlan> GetAdvisorPlanByCustomer()
+        public ActionResult<List<AdvisorPlan>> GetAdvisorPlanByCustomer()
         {
             try
             {
                 int customerId = HttpContext.Session.GetInt32("ClientID").Value;
-                var advisorPlan = _dataAccess.GetAdvisorPlanByCustomer(customerId);
-                return Ok(advisorPlan);
+                var advisorPlans = _dataAccess.GetAdvisorPlanByCustomer(customerId);
+                return Ok(advisorPlans);
             }
             catch (Exception ex)
             {
@@ -123,6 +122,21 @@ namespace ReactApp2.Server.Controllers
             }
         }
 
+        [HttpGet("ClientInfo")]
+        public ActionResult<User> GetClientInfo()
+        {
+            try
+            {
+                int customerId = HttpContext.Session.GetInt32("ClientID").Value;
+                var clientInfo = _dataAccess.GetClientInfo(customerId);
+                return Ok(clientInfo);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
     }
 }
