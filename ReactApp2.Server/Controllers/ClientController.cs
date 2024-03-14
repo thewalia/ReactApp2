@@ -23,7 +23,7 @@ namespace ReactApp2.Server.Controllers
 
         [HttpGet("Customers")]
         public ActionResult<List<Portfolio>> GetCustomersByCustomerID()
-        {
+       {
             try
             {
                 int customerId = HttpContext.Session.GetInt32("ClientID").Value;
@@ -39,13 +39,13 @@ namespace ReactApp2.Server.Controllers
 
         //Working
         [HttpPost("RiskType")]
-        public ActionResult UpdateRiskType([FromBody] string riskResult)
+        public ActionResult UpdateRiskType([FromBody] RiskResultModel RiskResult)
         {
             try
             {
                 int customerId = HttpContext.Session.GetInt32("ClientID").Value;
-                _dataAccess.UpdateRiskType(customerId, riskResult);
-                return Ok();
+                _dataAccess.UpdateRiskType(customerId, RiskResult);
+                return Ok(new { message = "Risk type updated successfully" });
             }
             catch (Exception ex)
             {
@@ -105,15 +105,15 @@ namespace ReactApp2.Server.Controllers
 
         //Working
         [HttpGet("Investments")]
-        public ActionResult<List<Investment>> GetInvestmentsByCustomer()
+        public ActionResult<List<InvestmentDetail>> GetInvestmentsByCustomer()
         {
             try
             {
                 // Retrieve the customer id from the session
                 int customerId = HttpContext.Session.GetInt32("ClientID").Value;
 
-                var investments = _dataAccess.GetInvestmentsByCustomer(customerId);
-                return Ok(investments);
+                var investmentDetail = _dataAccess.GetInvestmentsByCustomer(customerId);
+                return Ok(investmentDetail);
             }
             catch (Exception ex)
             {

@@ -25,17 +25,24 @@ function ClientInvestment() {
             <table style={{ width: '100%', marginBottom: '20px', borderCollapse: 'collapse', fontSize: '16px', lineHeight: '1.5' }}>
                 <thead>
                     <tr style={{ backgroundColor: '#f2f2f2', fontWeight: 'bold' }}>
-                        <th style={{ padding: '10px', textAlign: 'left' }}>Investment ID</th>
+                        
                         <th style={{ padding: '10px', textAlign: 'left' }}>Purchase Price</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Quantity</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>AssetType</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>CurrentPrice</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Symbol</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {investments.map((investment) => (
-                        <tr key={investment.investmentId} style={{ borderBottom: '1px solid #ccc', transition: 'background-color 0.3s ease' }} onMouseEnter={(e) => (e.target.style.backgroundColor = '#f9f9f9')} onMouseLeave={(e) => (e.target.style.backgroundColor = '#ffffff')}>
-                            <td style={{ padding: '10px' }}>{investment.assetId}</td>
-                            <td style={{ padding: '10px' }}>{investment.purchasePrice}</td>
-                            <td style={{ padding: '10px' }}>{investment.quantity}</td>
+                    {investments.map((investmentinfo) => (
+                        <tr key={investmentinfo.investment.investmentId} style={{ borderBottom: '1px solid #ccc', transition: 'background-color 0.3s ease' }} onMouseEnter={(e) => (e.target.style.backgroundColor = '#f9f9f9')} onMouseLeave={(e) => (e.target.style.backgroundColor = '#ffffff')}>
+                            <td style={{ padding: '10px' }}>{investmentinfo.investment.purchasePrice}</td>
+                            <td style={{ padding: '10px' }}>{investmentinfo.investment.quantity}</td>
+                            <td style={{ padding: '10px' }}>{investmentinfo.market.assetType}</td>
+                            <td style={{ padding: '10px' }}>{investmentinfo.market.name}</td>
+                            <td style={{ padding: '10px' }}>{investmentinfo.market.currentPrice}</td>
+                            <td style={{ padding: '10px' }}>{investmentinfo.market.symbol}</td>
                         </tr>
                     ))}
                 </tbody>

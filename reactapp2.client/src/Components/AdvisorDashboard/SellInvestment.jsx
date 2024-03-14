@@ -67,6 +67,7 @@ function SellInvestment() {
                         <th style={{ padding: '10px', textAlign: 'left' }}>AssetType</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>CurrentPrice</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Symbol</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,6 +98,7 @@ function SellInvestment() {
                             <td style={{ padding: '10px' }}>{detail.market.assetType}</td>
                             <td style={{ padding: '10px' }}>{detail.market.name}</td>
                             <td style={{ padding: '10px' }}>{detail.market.currentPrice}</td>
+                            <td style={{ padding: '10px' }}>{detail.market.symbol}</td>
                         </tr>
                     ))}
                 </tbody>

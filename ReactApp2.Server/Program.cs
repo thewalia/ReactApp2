@@ -1,4 +1,6 @@
 
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using ReactApp2.Server.Respository;
@@ -57,11 +59,34 @@ namespace ReactApp2.Server
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            var hangfireConnection = builder.Configuration.GetConnectionString("HangfireConnection");
+            // Add this inside the Main method, after builder.Services.AddSwaggerGen();
+            builder.Services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(hangfireConnection, new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                })); // Use the same connection string as your application
+
 
             // Add authentication
-            
+            // Add Hangfire server
+            builder.Services.AddHangfireServer();
 
             var app = builder.Build();
+            // Add this inside the Main method, after var app = builder.Build();
+
+            // Add this line to schedule the job every hour
+            var recurringJobManager = app.Services.GetService<IRecurringJobManager>();
+            recurringJobManager.AddOrUpdate<MarketController>("UpdateMarketDataJob", x => x.UpdateMarketDataJob(), Cron.Hourly);
+
+            app.UseHangfireDashboard();
             app.UseSession();
             app.UseCors();
             app.UseAuthentication();

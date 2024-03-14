@@ -82,7 +82,7 @@ export const Login = () => {
           <div className="footerDiv flex">
             <span className="text">New?? Way to success!!</span>
             <Link to={"/register"}>
-                 <button className="btn" style="Color:black;">Sign Up</button>
+                 <button className="btn" style="Color:black;">Register</button>
             </Link>
           </div>
         </div>
@@ -141,9 +141,9 @@ export const Login = () => {
               <AiOutlineSwapRight className="icon" />
             </button>
 
-            <span className="forgotPassword">
+                      {/*<span className="forgotPassword">
               Forgot your password? <a href="">Click Here</a>
-            </span>
+            </span>*/}
           </form>
         </div>
       </div>

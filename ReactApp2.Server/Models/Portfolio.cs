@@ -7,9 +7,9 @@
         public int AdvisorID { get; set; }
         public string PortfolioName { get; set; }
         public string RiskType { get; set;}
-        public int CurrentValue { get; set; }
+        public double CurrentValue { get; set; }
 
-        public int TotalInvestedValue { get; set; }
+        public double TotalInvestedValue { get; set; }
 
     }
 }

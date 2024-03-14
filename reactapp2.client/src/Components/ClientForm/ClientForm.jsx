@@ -21,17 +21,18 @@ function ClientForm() {
             parseInt(riskCapacity);
 
         if (totalPoints >= 71) {
-            setRiskResult('High');
+            return 'High';
         } else if (totalPoints >= 31) {
-            setRiskResult('Medium');
+            return 'Medium';
         } else {
-            setRiskResult('Low');
+            return 'Low';
         }
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        calculateRiskTolerance();
+        const calculatedRiskResult = calculateRiskTolerance();
+        setRiskResult(calculatedRiskResult);
 
         try {
             const response = await fetch(`https://localhost:7211/api/Client/RiskType`, {
@@ -39,7 +40,7 @@ function ClientForm() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(riskResult),
+                body: JSON.stringify({ riskResult: calculatedRiskResult }),
                 credentials: 'include'
             });
 

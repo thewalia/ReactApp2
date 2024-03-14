@@ -87,7 +87,7 @@ export const ClientDashboard = () => {
                                 <h3 style={{ color: '#555', fontSize: '20px' }}>Portfolio Name: {item.portfolioName}</h3>
                                 <p style={{ color: '#777', fontSize: '16px' }}>Risk Type: {item.riskType}</p>
                                 <p style={{ color: '#777', fontSize: '16px' }}>Current Value: {item.currentValue}</p>
-                                {/*<p style={{ color: '#777', fontSize: '16px' }}>Total Invested Value: {item.totalInvestedValue}</p>*/}
+                                <p style={{ color: '#777', fontSize: '16px' }}>Total Invested Value: {item.totalInvestedValue}</p>
                             </div>
                         ))}
                     </div>

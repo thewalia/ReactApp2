@@ -51,6 +51,7 @@ function Investment() {
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset Type</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset Name</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset Price</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Symbol</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,6 +77,7 @@ function Investment() {
                             <td style={{ padding: '10px' }}>{asset.assetType}</td>
                             <td style={{ padding: '10px' }}>{asset.name}</td>
                             <td style={{ padding: '10px' }}>{asset.currentPrice}</td>
+                            <td style={{ padding: '10px' }}>{asset.symbol}</td>
                         </tr>
                     ))}
                 </tbody>

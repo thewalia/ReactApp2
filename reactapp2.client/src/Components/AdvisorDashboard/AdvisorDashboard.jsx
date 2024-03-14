@@ -81,6 +81,9 @@ export const AdvisorDashboard = () => {
                                         <p>
                                             <strong>Current Value:</strong> {customer.currentValue}
                                         </p>
+                                        <p>
+                                            <strong>TotalInvestedValue:</strong> {customer.totalInvestedValue}
+                                        </p>
                                     </div>
                                 </div>
                                 <div style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

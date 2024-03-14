@@ -98,9 +98,9 @@ namespace ReactApp2.Server.Respository
             }
         }
 
-        public List<Investment> GetInvestmentsByCustomer(int customerId)
+        public List<InvestmentDetail> GetInvestmentsByCustomer(int customerId)
         {
-            List<Investment> investments = new List<Investment>();
+            List<InvestmentDetail> investmentDetails = new List<InvestmentDetail>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -118,20 +118,31 @@ namespace ReactApp2.Server.Respository
                     {
                         while (reader.Read())
                         {
-                            investments.Add(new Investment
+                            investmentDetails.Add(new InvestmentDetail
                             {
-                                InvestmentId = (int)reader["InvestmentId"],
-                                PortfolioId = (int)reader["PortfolioId"],
-                                AssetId = (int)reader["AssetId"],
-                                PurchasePrice = (int)reader["PurchasePrice"],
-                                Quantity = (int)reader["Quantity"]
+                                Investment = new Investment
+                                {
+                                    InvestmentId = (int)reader["InvestmentId"],
+                                    PortfolioId = (int)reader["PortfolioId"],
+                                    AssetId = (int)reader["AssetId"],
+                                    PurchasePrice = (double)reader["PurchasePrice"],
+                                    Quantity = (int)reader["Quantity"]
+                                },
+                                Market = new Market
+                                {
+                                    AssetId = (int)reader["AssetId"],
+                                    AssetType = reader["AssetType"].ToString(),
+                                    Name = reader["Name"].ToString(),
+                                    CurrentPrice = (double)reader["CurrentPrice"],
+                                    Symbol = reader["Symbol"].ToString()
+                                }
                             });
                         }
                     }
                 }
             }
 
-            return investments;
+            return investmentDetails;
         }
 
 
@@ -231,7 +242,7 @@ namespace ReactApp2.Server.Respository
             }
         }
 
-        public void UpdateRiskType(int customerId, string riskType)
+        public void UpdateRiskType(int customerId, RiskResultModel RiskType)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -243,7 +254,7 @@ namespace ReactApp2.Server.Respository
 
                     // Parameters
                     command.Parameters.AddWithValue("@CustomerId", customerId);
-                    command.Parameters.AddWithValue("@RiskType", riskType);
+                    command.Parameters.AddWithValue("@RiskType", RiskType.riskResult);
 
                     // ExecuteNonQuery since it's an UPDATE operation
                     command.ExecuteNonQuery();
@@ -334,8 +345,8 @@ namespace ReactApp2.Server.Respository
                                 AdvisorID = (int)reader["AdvisorID"],
                                 PortfolioName = reader["PortfolioName"].ToString(),
                                 RiskType = reader["RiskType"].ToString(),
-                                CurrentValue = (int)reader["CurrentValue"],
-                                //TotalInvestedValue = (int)reader["TotalInvestedValue"]
+                                CurrentValue = (double)reader["CurrentValue"],
+                                TotalInvestedValue = (double)reader["TotalInvestedValue"]
                             });
                         }
                     }

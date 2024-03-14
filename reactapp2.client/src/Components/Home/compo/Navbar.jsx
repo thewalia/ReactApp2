@@ -46,8 +46,8 @@ const Navbar = () => {
         <a href="">About</a>
         <a href="">Testimonials</a>
         <a href="">Contact</a>
-        <Link to={"/client/Login"} >
-            <button className="primary-button">Login </button>
+        <Link to={"/Login"} >
+            <button className="primary-button">Login/Register </button>
         </Link>
       </div>
       <div className="navbar-menu-container">

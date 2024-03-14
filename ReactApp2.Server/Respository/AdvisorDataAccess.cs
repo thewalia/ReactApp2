@@ -170,8 +170,8 @@ namespace ReactApp2.Server.Respository
                                 AdvisorID = (int)reader["AdvisorID"],
                                 PortfolioName = reader["PortfolioName"].ToString(),
                                 RiskType = reader["RiskType"].ToString(),
-                                CurrentValue = (int)reader["CurrentValue"],
-                                //TotalInvestedValue = (int)reader["TotalInvestedValue"]
+                                CurrentValue = (double)reader["CurrentValue"],
+                                TotalInvestedValue = (double)reader["TotalInvestedValue"]
                             });
                         }
                     }
@@ -220,10 +220,11 @@ namespace ReactApp2.Server.Respository
                         {
                             assets.Add(new Market
                             {
-                                AssetId = (int)reader["AssetId"],
+                                AssetId = (int)reader["AssetID"],
                                 AssetType = reader["AssetType"].ToString(),
                                 Name = reader["Name"].ToString(),
-                                CurrentPrice = (int)reader["CurrentPrice"]
+                                CurrentPrice = (double)reader["CurrentPrice"],
+                                Symbol = reader["Symbol"].ToString()
                             });
                         }
                     }
@@ -306,7 +307,7 @@ namespace ReactApp2.Server.Respository
                                     InvestmentId = (int)reader["InvestmentId"],
                                     PortfolioId = (int)reader["PortfolioId"],
                                     AssetId = (int)reader["AssetId"],
-                                    PurchasePrice = (int)reader["PurchasePrice"],
+                                    PurchasePrice = (double)reader["PurchasePrice"],
                                     Quantity = (int)reader["Quantity"]
                                 },
                                 Market = new Market
@@ -314,7 +315,8 @@ namespace ReactApp2.Server.Respository
                                     AssetId = (int)reader["AssetId"],
                                     AssetType = reader["AssetType"].ToString(),
                                     Name = reader["Name"].ToString(),
-                                    CurrentPrice = (int)reader["CurrentPrice"]
+                                    CurrentPrice = (double)reader["CurrentPrice"],
+                                    Symbol = reader["Symbol"].ToString()
                                 }
                             });
                         }
@@ -345,6 +347,52 @@ namespace ReactApp2.Server.Respository
                 }
             }
         }
+
+        public void UpdateMarketData(List<MarketIn> marketData)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var data in marketData)
+                        {
+                            // First, try to update
+                            string updateQuery = "UPDATE Market SET Name = @Name, CurrentPrice = @CurrentPrice, AssetType = 'Stocks' WHERE Symbol = @Symbol";
+                            using (SqlCommand command = new SqlCommand(updateQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@Symbol", data.symbol);
+                                command.Parameters.AddWithValue("@Name", data.name);
+                                command.Parameters.AddWithValue("@CurrentPrice", data.price);
+
+                                int rowsAffected = command.ExecuteNonQuery();
+
+                                // If no rows were updated, then insert
+                                if (rowsAffected == 0)
+                                {
+                                    string insertQuery = "INSERT INTO Market (Symbol, Name, AssetType, CurrentPrice) VALUES (@Symbol, @Name, 'Stocks' ,@CurrentPrice)";
+                                    command.CommandText = insertQuery;
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, roll back the transaction.
+                        transaction.Rollback();
+                        throw; // Re-throw the exception to handle it up the stack.
+                    }
+                }
+            }
+        }
+
+
+
 
 
     }

@@ -145,9 +145,9 @@ export const Register = () => {
               <AiOutlineSwapRight className="icon" />
             </button>
 
-            <span className="forgotPassword">
+                      {/*<span className="forgotPassword">
               Forgot your password? <a href="">Click Here</a>
-            </span>
+            </span>*/}
           </form>
         </div>
       </div>
