@@ -22,6 +22,7 @@ function ClientInvestment() {
     return (
         <div style={{ padding: '20px', backgroundColor: '#ffffff', flex: 1, margin: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
             <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#333' }}>Investments</h2>
+            <div style={{ overflowX: 'auto', maxHeight: '400px' }}>
             <table style={{ width: '100%', marginBottom: '20px', borderCollapse: 'collapse', fontSize: '16px', lineHeight: '1.5' }}>
                 <thead>
                     <tr style={{ backgroundColor: '#f2f2f2', fontWeight: 'bold' }}>
@@ -46,7 +47,8 @@ function ClientInvestment() {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+                </table>
+            </div>
         </div>
     );
 }

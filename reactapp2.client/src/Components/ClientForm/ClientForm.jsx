@@ -151,6 +151,23 @@ function ClientForm() {
                 >
                     Calculate Risk Tolerance
                 </button>
+
+                    <button
+                        onClick={() => navigate('/clientdashboard')}
+                        style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#007BFF',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer',
+                            borderRadius: '4px',
+                            transition: 'background-color 0.3s ease',
+                            fontSize: '16px',
+                            marginTop: '10px'
+                        }}
+                    >
+                        Already sent details please go to ClientDashboard
+                    </button>
             </form>
             {riskResult && <p style={{ textAlign: 'center', marginTop: '30px', fontFamily: 'Roboto, sans-serif', fontSize: '20px', color: '#333' }}>Risk Tolerance: {riskResult}</p>}
             </div>

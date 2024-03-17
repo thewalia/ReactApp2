@@ -8,6 +8,7 @@ export const ClientDashboard = () => {
     //const [approval, setApproval] = useState(null);
     const [activeComponent, setActiveComponent] = useState('portfolio');
     const [clientInfo, setClientInfo] = useState(null);
+    const [message, setMessage] = useState(null);
 
 
     useEffect(() => {
@@ -63,10 +64,9 @@ export const ClientDashboard = () => {
             credentials: 'include'
         });
         if (response.ok) {
-            console.log('Plan approval updated successfully');
-            // Optionally, you can refetch the advisor plans or update the local state
+            setMessage('Plan approval updated successfully');
         } else {
-            console.error('Failed to update plan approval');
+            setMessage('Failed to update plan approval');
         }
     };
 
@@ -94,7 +94,10 @@ export const ClientDashboard = () => {
                 );
             case 'advisorPlan':
                 return (
+                    
                     <div className="section" style={{ margin: '20px 0' }}>
+
+                        
                         <h2 style={{ color: '#333', fontSize: '24px' }}>Advisor Plans</h2>
                         {advisorPlan.map((plan, index) => (
                             <AdvisorPlanCard key={index} plan={plan} onApprovalChange={handleApprovalChange} />
@@ -115,25 +118,36 @@ export const ClientDashboard = () => {
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                     <li
                         style={{ marginBottom: '10px', cursor: 'pointer', color: activeComponent === 'portfolio' ? '#fff' : '#ccc' }}
-                        onClick={() => setActiveComponent('portfolio')}
+                        onClick={() => {
+                            setMessage(null)
+                            setActiveComponent('portfolio')
+                        }}
                     >
                         Portfolio
                     </li>
                     <li
                         style={{ marginBottom: '10px', cursor: 'pointer', color: activeComponent === 'advisorPlan' ? '#fff' : '#ccc' }}
-                        onClick={() => setActiveComponent('advisorPlan')}
+                        onClick={() => {
+                            setMessage(null)
+                            setActiveComponent('advisorPlan')
+                        }}
                     >
                         Advisor Plan
                     </li>
                     <li
                         style={{ marginBottom: '10px', cursor: 'pointer', color: activeComponent === 'investments' ? '#fff' : '#ccc' }}
-                        onClick={() => setActiveComponent('investments')} // New menu item for investments
+                        onClick={() => {
+                            setMessage(null)
+                            setActiveComponent('investments')
+                        }} // New menu item for investments
                     >
                         Investments
                     </li>
                 </ul>
             </div>
-            <div style={{ flex: 1, padding: '20px', backgroundColor: '#f4f4f4' }}>{renderActiveComponent()}</div>
+            <div style={{ flex: 1, padding: '20px', backgroundColor: '#f4f4f4' }}>
+                {message && <div>{message}</div>}
+                {renderActiveComponent()}</div>
         </div>
     );
 };

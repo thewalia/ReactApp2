@@ -14,21 +14,28 @@ function Investment() {
         fetchAssets();
     }, []);
 
-    const handleAssetSelect = (assetId) => {
+    const handleAssetSelect = (assetId, quantity) => {
         setSelectedAssets((prevSelectedAssets) => {
-            if (prevSelectedAssets.includes(assetId)) {
-                return prevSelectedAssets.filter((id) => id !== assetId);
+            if (quantity > 0) {
+                return { ...prevSelectedAssets, [assetId]: quantity };
             } else {
-                return [...prevSelectedAssets, assetId];
+                const { [assetId]: _, ...rest } = prevSelectedAssets;
+                return rest;
             }
         });
     };
 
     const handleInvestmentsSubmit = async () => {
+        const investments = Object.entries(selectedAssets).map(([assetId, quantity]) => ({
+            AssetId: parseInt(assetId),
+            Quantity: quantity,
+            // Add other properties as needed
+        }));
+
         const response = await fetch('https://localhost:7211/api/Advisor/AddInvestments', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(selectedAssets),
+            body: JSON.stringify(investments),
             credentials: 'include',
         });
 
@@ -43,21 +50,23 @@ function Investment() {
         <div style={{ padding: '20px', backgroundColor: '#ffffff', flex: 1, margin: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
             <h1 style={{ marginBottom: '20px', color: '#333', textAlign: 'center' }}>Available Assets</h1>
             {investmentStatus && <p style={{ color: investmentStatus.includes('success') ? 'green' : 'red', textAlign: 'center' }}>{investmentStatus}</p>}
+            <div style={{ overflowX: 'auto', maxHeight: '400px' } }>
             <table style={{ width: '100%', marginBottom: '20px', borderCollapse: 'collapse', fontSize: '16px', lineHeight: '1.5' }}>
                 <thead>
                     <tr style={{ backgroundColor: '#f2f2f2', fontWeight: 'bold' }}>
-                        <th style={{ padding: '10px', textAlign: 'left' }}>Select</th>
+                        
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset ID</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset Type</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset Name</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Asset Price</th>
                         <th style={{ padding: '10px', textAlign: 'left' }}>Symbol</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>Quantity</th>
                     </tr>
                 </thead>
                 <tbody>
                     {assets.map((asset, index) => (
                         <tr key={index} style={{ borderBottom: '1px solid #ccc', transition: 'background-color 0.3s ease' }} onMouseEnter={(e) => (e.target.style.backgroundColor = '#f9f9f9')} onMouseLeave={(e) => (e.target.style.backgroundColor = '#ffffff')}>
-                            <td style={{ padding: '10px' }}>
+                            {/* <td style={{ padding: '10px' }}>
                                 <input
                                     type="checkbox"
                                     onChange={() => handleAssetSelect(asset.assetId)}
@@ -72,16 +81,25 @@ function Investment() {
                                     }}
                                     checked={selectedAssets.includes(asset.assetId)}
                                 />
-                            </td>
+                            </td> */}
                             <td style={{ padding: '10px' }}>{asset.assetId}</td>
                             <td style={{ padding: '10px' }}>{asset.assetType}</td>
                             <td style={{ padding: '10px' }}>{asset.name}</td>
                             <td style={{ padding: '10px' }}>{asset.currentPrice}</td>
                             <td style={{ padding: '10px' }}>{asset.symbol}</td>
+                            <td style={{ padding: '10px' }}>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={selectedAssets[asset.assetId] || ''}
+                                    onChange={(e) => handleAssetSelect(asset.assetId, e.target.value)}
+                                />
+                            </td>
                         </tr>
                     ))}
                 </tbody>
-            </table>
+                </table>
+            </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button
                     onClick={handleInvestmentsSubmit}

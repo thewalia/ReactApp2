@@ -102,6 +102,23 @@ function AdvisorForm() {
                     transition: 'background-color 0.3s ease',
                     fontSize: '16px'
                 }}>Submit</button>
+
+                <button
+                    onClick={() => navigate('/AdvisorDashboard')}
+                    style={{
+                        padding: '10px 20px',
+                        backgroundColor: '#007BFF',
+                        color: 'white',
+                        border: 'none',
+                        cursor: 'pointer',
+                        borderRadius: '4px',
+                        transition: 'background-color 0.3s ease',
+                        fontSize: '16px',
+                        marginTop: '10px'
+                    }}
+                >
+                    Already sent details please go to AdvisorDashboard
+                </button>
             </form>
         </div>
     );

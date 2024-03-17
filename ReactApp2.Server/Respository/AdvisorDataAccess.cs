@@ -234,13 +234,13 @@ namespace ReactApp2.Server.Respository
             return assets;
         }
 
-        public void AddInvestments(int advisorId, List<int> assetIds)
+        public void AddInvestments(int advisorId, List<Investment> investments)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                foreach (int assetId in assetIds)
+                foreach (Investment investment in investments)
                 {
                     using (SqlCommand command = new SqlCommand("AddInvestment", connection))
                     {
@@ -248,7 +248,8 @@ namespace ReactApp2.Server.Respository
 
                         // Parameters
                         command.Parameters.AddWithValue("@AdvisorId", advisorId);
-                        command.Parameters.AddWithValue("@AssetId", assetId);
+                        command.Parameters.AddWithValue("@AssetId", investment.AssetId);
+                        command.Parameters.AddWithValue("@Quantity", investment.Quantity);
 
                         // ExecuteNonQuery since it's an INSERT operation
                         command.ExecuteNonQuery();
@@ -257,21 +258,24 @@ namespace ReactApp2.Server.Respository
             }
         }
 
-        public void SellInvestments(int advisorId, List<int> assetIds)
+
+        public void SellInvestments(int advisorId, List<Investment> investments)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                foreach (int assetId in assetIds)
+                foreach (Investment investment in investments)
                 {
                     using (SqlCommand command = new SqlCommand("SellInvestment", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
                         // Parameters
-                        command.Parameters.AddWithValue("@AdvisorId", advisorId);
-                        command.Parameters.AddWithValue("@AssetId", assetId);
+                        //command.Parameters.AddWithValue("@AdvisorId", advisorId);
+                        command.Parameters.AddWithValue("@InvestmentId", investment.InvestmentId);
+                        //command.Parameters.AddWithValue("@AssetId", investment.AssetId);
+                        command.Parameters.AddWithValue("@Quantity", investment.Quantity);
 
                         // ExecuteNonQuery since it's an UPDATE operation
                         command.ExecuteNonQuery();
@@ -279,6 +283,7 @@ namespace ReactApp2.Server.Respository
                 }
             }
         }
+
 
         public List<InvestmentDetail> GetClientInvestments(int advisorId)
         {

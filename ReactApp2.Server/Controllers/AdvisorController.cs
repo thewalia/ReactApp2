@@ -110,14 +110,12 @@ namespace ReactApp2.Server.Controllers
 
         //Working
         [HttpPost("AddInvestments")]
-        public ActionResult AddInvestments([FromBody] List<int> assetIds)
+        public ActionResult AddInvestments([FromBody] List<Investment> investments)
         {
             try
             {
-                // Retrieve the advisor id from the session
                 int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
-
-                _dataAccess.AddInvestments(advisorId, assetIds);
+                _dataAccess.AddInvestments(advisorId, investments);
                 return Ok();
             }
             catch (Exception ex)
@@ -129,14 +127,12 @@ namespace ReactApp2.Server.Controllers
 
         //Working
         [HttpDelete("SellInvestments")]
-        public ActionResult SellInvestments([FromBody] List<int> assetIds)
+        public ActionResult SellInvestments([FromBody] List<Investment> investments)
         {
             try
             {
-                // Retrieve the advisor id from the session
                 int advisorId = HttpContext.Session.GetInt32("AdvisorID").Value;
-
-                _dataAccess.SellInvestments(advisorId, assetIds);
+                _dataAccess.SellInvestments(advisorId, investments);
                 return Ok();
             }
             catch (Exception ex)
