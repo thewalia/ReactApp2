@@ -90,7 +90,25 @@ export const ClientDashboard = () => {
                                 <p style={{ color: '#777', fontSize: '16px' }}>Total Invested Value: {item.totalInvestedValue}</p>
                             </div>
                         ))}
+                        <button
+                            onClick={() => window.open('http://localhost:8501/', '_blank')}
+                            style={{
+                                marginTop: '20px',
+                                padding: '10px 20px',
+                                backgroundColor: '#007bff',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.3s ease',
+                            }}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = '#000000')}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = '#007bff')}
+                        >
+                            Chat with Gemini Pro
+                        </button>
                     </div>
+
                 );
             case 'advisorPlan':
                 return (

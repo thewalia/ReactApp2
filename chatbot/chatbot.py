@@ -42,6 +42,8 @@ prompt=[
     """
 ]
 
+prompt2 = [""" You are working for PeakPortfolio the main mission of PeakPortfolio is to advise our clients and guide them on properly doing various investment. You will align all your knowledge with respect to the investment sector and fianance and help in catering questions of our clients and advisors. If the user asks any question apart from investment and finance you will say:- i am not allowed to answer this question. But if the user asks this type of question like :- what is name of this company then you cannot say i am not allowed to answers this question. So you need to answer all Investment,finance and company related question """]
+
 ## Function to get Gemini response based on intent
 def get_gemini_response(question):
     xg1=0
@@ -56,13 +58,13 @@ def get_gemini_response(question):
     if xg1 == 0:
         response = chat_session.send_message([prompt[0],question])
     else:
-        response = chat_session.send_message(question)
+        response = chat_session.send_message([prompt2[0],question])
     return response.text
 
 
 ## Function to determine if the question is a SQL query
 def is_sql_query(question):
-    sql_keywords = ["how many", "list", "select", "where", "from"]
+    sql_keywords = ["list", "select", "where", "from"]
     return any(word in question.lower() for word in sql_keywords)
 
 ## Start chat sessions for SQL and general conversation
@@ -103,7 +105,8 @@ db_config = {
 }
 
 st.set_page_config(page_title="I can Retrieve Any SQL query")
-st.header("Gemini App To Retrieve SQL Data")
+st.header("I will answer your General investment related question and Database queries")
+st.text("For database query use following keywords:- list, select, where, from")
 
 question = st.text_input("Input: ", key="input")
 submit = st.button("Ask the question")

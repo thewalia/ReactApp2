@@ -8,6 +8,8 @@ export const AdvisorDashboard = () => {
     const [customers, setCustomers] = useState([]);
     const [plan, setPlan] = useState('');
     const [activeComponent, setActiveComponent] = useState('customers');
+    const [message, setMessage] = useState(null);
+
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -33,9 +35,9 @@ export const AdvisorDashboard = () => {
             body: JSON.stringify(advisorPlan),
         });
         if (response.ok) {
-            console.log('Plan update successful');
+            setMessage('Plan update successful');
         } else {
-            console.log('Plan update failed');
+            setMessage('Plan update failed');
         }
     };
 
@@ -52,6 +54,7 @@ export const AdvisorDashboard = () => {
             case 'customers':
                 return (
                     <div style={{ padding: '20px', backgroundColor: '#f4f4f4', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        {message && <div>{message}</div>}
                         <h1 style={{ marginBottom: '20px', color: '#333' }}>Advisor Dashboard</h1>
                         {customers.map((customer, index) => (
                             <div
@@ -118,6 +121,24 @@ export const AdvisorDashboard = () => {
                                     >
                                         Update Plan
                                     </button>
+
+                                    <button
+                                        onClick={() => window.open('http://localhost:8501/', '_blank')}
+                                        style={{
+                                            marginTop: '20px',
+                                            padding: '10px 20px',
+                                            backgroundColor: '#007bff',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s ease',
+                                        }}
+                                        onMouseEnter={(e) => (e.target.style.backgroundColor = '#000000')}
+                                        onMouseLeave={(e) => (e.target.style.backgroundColor = '#007bff')}
+                                    >
+                                        Chat with Gemini Pro
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -139,24 +160,34 @@ export const AdvisorDashboard = () => {
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                     <li
                         style={{ marginBottom: '10px', cursor: 'pointer', color: activeComponent === 'customers' ? '#fff' : '#ccc' }}
-                        onClick={() => setActiveComponent('customers')}
+                        onClick={() => {
+                            setMessage(null)
+                            setActiveComponent('customers')
+                        } }
                     >
                         Customers
                     </li>
                     <li
                         style={{ marginBottom: '10px', cursor: 'pointer', color: activeComponent === 'createInvestment' ? '#fff' : '#ccc' }}
-                        onClick={() => setActiveComponent('createInvestment')}
+                        onClick={() => {
+                            setMessage(null)
+                            setActiveComponent('createInvestment')
+                        }}
                     >
                         Create Investment
                     </li>
                     <li
                         style={{ marginBottom: '10px', cursor: 'pointer', color: activeComponent === 'sellInvestment' ? '#fff' : '#ccc' }}
-                        onClick={() => setActiveComponent('sellInvestment')}
+                        onClick={() => {
+                            setMessage(null)
+                            setActiveComponent('sellInvestment')
+                        }}
                     >
                         Sell Investment
                     </li>
                 </ul>
             </div>
+           
             {renderActiveComponent()}
         </div>
     );

@@ -90,7 +90,7 @@ export const Login = () => {
         <div className="formDiv flex">
           <div className="headerDiv">
             <img src={logo} alt="Logo Image" />
-            <h3>Welcome Back!!(Advisor)</h3>
+            <h3>Welcome Back!!</h3>
           </div>
 
           <form onSubmit={handleSubmit} className="form grid">
@@ -147,7 +147,7 @@ export const Login = () => {
           </form>
         </div>
       </div>
-      <a href="./Dashboard">Dashboard</a>
+     
     </div>
   );
 };
