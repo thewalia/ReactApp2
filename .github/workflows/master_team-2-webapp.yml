@@ -30,7 +30,7 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cd reactapp2.client/build/*
+          cd reactapp2.client/dist/*
           zip -r ../release.zip ./*
 
       - name: Upload artifact for deployment job
